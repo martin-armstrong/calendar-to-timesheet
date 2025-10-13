@@ -7,4 +7,5 @@ Clicking the copy button gathers all the data about your calendar entries throug
 Install [Tampermonkey](https://www.tampermonkey.net/) Chrome/Firefox browser extension.\
 Right click [here](https://github.com/martin-armstrong/calendar-to-timesheet/raw/main/Calendar-To-Timesheet-Assistant.user.js) and select open in new tab, you should see a prompt to install the script into Tampermonkey.\
 Visit your google calendar and you should see the copy button added at the top next to the settings menu icon.\
-Label up your calendar entries e.g. "Project A", "Project B", "Training", "People Management", "Community Meetings"
+![Image](https://github.com/martin-armstrong/calendar-to-timesheet/raw/master/google-copy-button.png)
+Then label up your calendar entries e.g. "Project A", "Project B", "Training", "People Management", "Community Meetings"
