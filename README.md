@@ -6,7 +6,7 @@ Clicking the copy button gathers all the data about your calendar entries throug
 
 
 <img src="https://github.com/martin-armstrong/calendar-to-timesheet/blob/main/google-copy-button.png?raw=true" alt="Google Calendar Copy Button" style="width:50%; height:auto;" />\
-<img src="https://github.com/martin-armstrong/calendar-to-timesheet/blob/main/replicon-paste-buttons.png?raw=true" alt="Replicon timesheet Paste Buttons" style="width:70%; height:auto;" />\
+<img src="https://github.com/martin-armstrong/calendar-to-timesheet/blob/main/replicon-paste-buttons.png?raw=true" alt="Replicon timesheet Paste Buttons" style="width:40%; height:auto;" />\
 
 ### How to Install
 Install [Tampermonkey](https://www.tampermonkey.net/) Chrome/Firefox browser extension.\
