@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Calendar-To-Timesheet-Assistant
 // @namespace    http://capgemini.com/calendar-to-timesheet
-// @version      0.2
+// @version      0.3
 // @description  Tool for copying google calendar labelled bookings throughout your week into a Replicon timesheet row
 // @author       Martin Armstrong
 // @match        https://calendar.google.com/calendar/u/0/r/week
@@ -109,17 +109,38 @@
       copyDataToClipboard: function(entries) {
         console.debug(`googleCalendar.copyDataToClipboard()`);
         if(Object.keys(entries).length>0) {
-            let entriesByDate = googleCalendar.getEntriesByDate(entries);
+
+            //let entriesByDate = googleCalendar.getEntriesByDate(entries);
+            let entriesTotalHours = googleCalendar.getEntriesTotalHours(entries);
+
             entries["label"] = timesheetJsonLabel;
             let json = JSON.stringify(entries);
             let jsonWithLineBreaks = json
              .replaceAll("],","],\n")
              .replaceAll("},","},\n")
              .replaceAll("[{","[\n{")
-             .replaceAll("}]","}\n]")
+             .replaceAll("}]","}\n]");
             navigator.clipboard.writeText(jsonWithLineBreaks);
-            googleCalendar.showAlertOfCopiedEntries(entriesByDate);
+
+            googleCalendar.showAlertOfCopiedEntriesByLabel(entriesTotalHours);
+            //googleCalendar.showAlertOfCopiedEntriesByDate(entriesByDate);
         }
+      },
+      getEntriesTotalHours: function(entries) {
+           console.debug(`googleCalendar.getEntriesTotalHours()`);
+          console.debug(entries);
+
+           let entriesTotalHours = Object.keys(entries).reduce((entriesTotalHours, entryName)=>{
+               let entryDates = entries[entryName]
+               entryDates.forEach((dateHours)=>{
+                   entriesTotalHours[entryName] = entriesTotalHours[entryName] || 0;
+                   entriesTotalHours[entryName] += dateHours.hours;
+               });
+               return entriesTotalHours;
+           }, {});
+
+          console.debug(entriesTotalHours);
+          return entriesTotalHours;
       },
       getEntriesByDate: function(entries) {
            let entriesByDate = Object.keys(entries).reduce((entriesByDate, entryName)=>{
@@ -131,10 +152,10 @@
                return entriesByDate;
            }, {});
 
-          console.log(entriesByDate);
+          console.debug(entriesByDate);
           return entriesByDate;
       },
-      showAlertOfCopiedEntries: function(entriesByDate) {
+      showAlertOfCopiedEntriesByDate: function(entriesByDate) {
           const detailLines = Object.keys(entriesByDate).map((dateString) => {
               return dateString + " - " + entriesByDate[dateString].reduce((line, namedHours)=>{
                 return line + ` ${namedHours.name}:${namedHours.hours}`
@@ -150,6 +171,15 @@
           }).sort();
           const totalHoursBlock = totalHoursLines.reduce((block, line)=>{return block + line + "\n"}, "");
           alert(`Labelled bookings copied to clipboard..\n${totalHoursBlock}`)
+      },
+      showAlertOfCopiedEntriesByLabel: function(entriesTotalHours) {
+          console.debug(`googleCalendar.showAlertOfCopiedEntriesByLabel()`);
+          const detailLines = Object.keys(entriesTotalHours).map((label) => {
+              return label + " - " + entriesTotalHours[label] + " hours";
+          });
+          const detailBlock = detailLines.reduce((block, line)=>{return block + line + "\n"}, "Labelled bookings copied to clipboard..\n");
+          console.log(detailBlock);
+          alert(detailBlock);
       },
       parseTimeToHours:function(str) { //e.g. "3:30pm" -> 15.5
           let isTimeWithMinutes = str.match(/([\d]+):([\d]+).+/);
